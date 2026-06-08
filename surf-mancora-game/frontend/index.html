@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Torneo de Surf en Máncora - Piura 2026</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- ═══════════════════════════════════════════════════════════
+         PANTALLA DE AUTENTICACIÓN
+         ═══════════════════════════════════════════════════════════ -->
+    <div id="authScreen" class="auth-container">
+        <div class="auth-box">
+            <h1>🏄 Torneo de Surf Máncora 2026</h1>
+            <p>Inicia sesión o regístrate para guardar tus récords en la tabla de clasificación.</p>
+
+            <div id="loginForm">
+                <input type="text" id="username" placeholder="Tu Nickname (Ej: Piurano2026)">
+                <input type="password" id="password" placeholder="Contraseña secreta">
+                <br>
+                <button id="btnLogin" class="btn-primary">Entrar a las Olas</button>
+                <button id="btnRegister" class="btn-secondary">Crear Cuenta Nueva</button>
+            </div>
+            <p id="authMessage" style="color: red; font-size: 14px; margin-top: 10px;"></p>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         LAYOUT PRINCIPAL: 3 COLUMNAS (izquierda, canvas, derecha)
+         NUEVO: Paneles laterales para leaderboard, récord, creador
+         ═══════════════════════════════════════════════════════════ -->
+    <div id="main-layout">
+
+        <!-- ─── PANEL IZQUIERDO: Leaderboard + Tu récord ─── -->
+        <aside id="panel-left">
+            <!-- Top Puntajes -->
+            <div class="side-card" id="leaderboard-card">
+                <h3>Top puntajes</h3>
+                <ol id="leaderboard-list">
+                    <li>Cargando...</li>
+                </ol>
+            </div>
+
+            <!-- Tu mejor récord -->
+            <div class="side-card" id="my-record-card">
+                <h3>Tu récord</h3>
+                <p>Mejor: <span id="myBest" style="color: #00FF99; font-weight: 600;">—</span></p>
+                <p>Nivel máx.: <span id="myLevel" style="color: #00FF99; font-weight: 600;">—</span></p>
+                <p>Partidas: <span id="myGames" style="color: #00FF99; font-weight: 600;">—</span></p>
+            </div>
+        </aside>
+
+        <!-- ─── CANVAS Y CONTROLES DEL JUEGO ─── -->
+        <div id="game-container">
+            <canvas id="surfCanvas" width="800" height="600"></canvas>
+
+            <div id="hud">
+                <p>Jugador: <span id="playerName">Invitado</span></p>
+                <p>Nivel: <span id="currentLevel">1</span></p>
+                <p>Puntaje: <span id="score">0</span></p>
+            </div>
+
+            <!-- Botón Retry (Game Over) -->
+            <button id="btnRetry" style="display:none;">
+                🔄 Volver a Intentar
+            </button>
+
+            <!-- NUEVO: Botón Home (Victoria) - permite cambiar usuario y volver a jugar -->
+            <button id="btnHome" style="display:none;">
+                🏠 Inicio / Cambiar usuario
+            </button>
+        </div>
+
+        <!-- ─── PANEL DERECHO: Creador + Controles ─── -->
+        <aside id="panel-right">
+            <!-- Información del creador -->
+            <div class="side-card">
+                <h3>Creador</h3>
+                <p class="creator-name">franksuanima</p>
+                <p class="creator-sub">Torneo de Surf Máncora 2026</p>
+                <p class="creator-sub" style="color: #FF9500;">📍 Piura, Perú</p>
+            </div>
+
+            <!-- Guía de Controles -->
+            <div class="side-card">
+                <h3>Controles</h3>
+                <ul style="margin: 0; padding-left: 14px; line-height: 1.9;">
+                    <li>← → Mover tabla</li>
+                    <li>Espacio — Saltar</li>
+                    <li>Meta: 800 puntos</li>
+                </ul>
+                <p class="tip" style="margin-top: 8px; font-size: 11px; color: rgba(255,255,255,0.6);">
+                    <strong>Nivel 1:</strong> Mantén el equilibrio.<br>
+                    <strong>Nivel 2:</strong> Esquiva tortugas saltando.
+                </p>
+            </div>
+        </aside>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SCRIPTS (en orden de dependencia)
+         ═══════════════════════════════════════════════════════════ -->
+    <script src="js/assets.js"></script>
+    <script src="js/physics.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/surfer.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/obstacle.js"></script>
+    <script src="js/sun.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
