@@ -23,6 +23,7 @@ class Surfer {
         if (!this.isJumping) {
             this.velocityY = this.jumpStrength;
             this.isJumping = true;
+            audioManager.playJump();
         }
     }
 

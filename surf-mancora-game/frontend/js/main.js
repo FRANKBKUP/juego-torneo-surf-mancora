@@ -180,6 +180,7 @@ btnLogin.addEventListener('click', async () => {
             loadPlayerStats(currentPlayer.username);
 
             gameLoop();
+            audioManager.playBackgroundMusic();
         }, 500);
 
     } else {
@@ -220,6 +221,7 @@ function goToHome() {
     currentPlayer = null;
     playerNameDisplay.innerText = 'Invitado';
     resetGameState();
+    audioManager.stopBackgroundMusic();
 }
 
 
@@ -346,6 +348,8 @@ function handleSuns() {
         if (distance < 50) {
             gameState.score += gameState.currentLevel === 1 ? 50 : 100;
             gameState.suns.splice(i, 1);
+            audioManager.playSunCollect();
+            if (visualEffects) visualEffects.createExplosion(sun.x, sun.y, 'gold', 15);
             console.log("☀️ Sol atrapado");
             continue;
         }
@@ -388,6 +392,8 @@ function gameLoop() {
             player.x -= tiltDifficulty * 10;
 
             if (player.x < 0) {
+                audioManager.playCollision();
+                if (visualEffects) visualEffects.flashRed(150);
                 endGame(false);
                 return;
             }
@@ -398,8 +404,21 @@ function gameLoop() {
 
             drawEnvironment();
             handleSuns();
+            if (visualEffects && visualEffects.shieldOpacity > 0) {
+                visualEffects.drawShield(player.x, player.y, gameState.time);
+            }
             player.draw(ctx);
             handleParticles();
+
+            // Dibujar explosiones de partículas
+            if (visualEffects) {
+                visualEffects.updateAndDrawExplosions();
+            }
+
+            // Dibujar flash de pantalla
+            if (visualEffects) {
+                visualEffects.drawFlash();
+            }
 
             if (gameState.score >= 400) {
                 gameState.currentLevel = 2;
@@ -421,6 +440,21 @@ function gameLoop() {
 
             drawEnvironment();
             handleSuns();
+            if (visualEffects && visualEffects.shieldOpacity > 0) {
+                visualEffects.drawShield(player.x, player.y, gameState.time);
+            }
+            player.draw(ctx);
+            handleParticles();
+
+            // Dibujar explosiones de partículas
+            if (visualEffects) {
+                visualEffects.updateAndDrawExplosions();
+            }
+
+            // Dibujar flash de pantalla
+            if (visualEffects) {
+                visualEffects.drawFlash();
+            }
 
             if (gameState.frameCount % 90 === 0) {
                 const waveY = PhysicsEngine.getWaveY(canvas.width, gameState.time);
@@ -438,6 +472,8 @@ function gameLoop() {
                 const distance = Math.sqrt(dx * dx + dy * dy);
 
                 if (distance < obs.radius + 20) {
+                    audioManager.playCollision();
+                    if (visualEffects) visualEffects.createImpact(player.x, player.y);
                     endGame(false);
                     return;
                 }
@@ -486,6 +522,12 @@ window.onload = async () => {
         ]);
 
         console.log("¡Assets listos! Esperando que el jugador inicie sesión...");
+
+        // Inicializar el sistema de audio
+        audioManager.initializeSounds();
+        // Inicializar efectos visuales
+        initializeVisualEffects();
+
     } catch (error) {
         console.error("Error cargando assets:", error);
     }
@@ -498,13 +540,14 @@ window.onload = async () => {
 
 function endGame(isVictory) {
     gameState.isGameOver = true;
-    isLoopRunning = false; // [FIX-02]
+    isLoopRunning = false;
 
     if (rafId) {
         cancelAnimationFrame(rafId);
         rafId = null;
     }
-
+    audioManager.playVictory();
+    if (visualEffects) visualEffects.flashWhite(300);
     ctx.save();
     ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -536,7 +579,6 @@ function endGame(isVictory) {
                 ctx.textAlign = 'center';
 
                 if (result.success) {
-                    // [FIX-07] Solo mostramos lo que el backend realmente envía
                     ctx.fillStyle = '#00FF00';
                     ctx.font = 'bold 28px Arial';
                     ctx.fillText(result.message, canvas.width / 2, canvas.height / 2);
@@ -571,6 +613,7 @@ function endGame(isVictory) {
         }, 500);
 
     } else {
+        audioManager.playGameOver();
         ctx.fillStyle = 'red';
         ctx.fillText("¡ GAME OVER !", canvas.width / 2, canvas.height / 2 - 40);
         ctx.fillStyle = 'white';
