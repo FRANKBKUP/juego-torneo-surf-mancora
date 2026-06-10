@@ -1,56 +1,42 @@
-# 🏄 Torneo de Surf en Máncora 2026
+## Características principales
 
-Videojuego web desarrollado con **HTML5 Canvas, JavaScript, PHP y MySQL**, ambientado en la playa de Máncora, Piura (Perú). El proyecto combina simulación física básica, persistencia de datos y autenticación de usuarios para ofrecer una experiencia interactiva de dos niveles inspirada en el surf y la cultura costera piurana.
+## Características principales
 
-## 📋 Descripción del proyecto
+* Sistema de autenticación de usuarios mediante PHP y MySQL.
+* Registro e inicio de sesión con contraseñas cifradas mediante bcrypt.
+* Persistencia de puntajes y progreso del jugador.
+* Tabla de clasificación global (Leaderboard).
+* Estadísticas individuales por usuario.
+* Simulación física de olas mediante funciones senoidales.
+* Sistema de partículas para representar espuma y movimiento del agua.
+* Sistema de audio con música de fondo y efectos sonoros.
+* Sistema de efectos visuales para colisiones, recompensas y victoria.
+* Arquitectura modular basada en JavaScript ES6+.
+* Comunicación asíncrona cliente-servidor mediante Fetch API.
+* Interfaz con HUD informativo en tiempo real.
+* Integración entre HTML5 Canvas, PHP, Apache y MySQL.
 
-El jugador participa en el **Torneo de Surf de Máncora 2026**, donde deberá superar dos desafíos consecutivos para alcanzar la puntuación máxima.
-
-### Nivel 1 — Equilibrio sobre la ola
-El jugador controla el movimiento lateral del surfista mientras intenta mantener el equilibrio sobre una ola simulada matemáticamente.
-
-**Objetivo:** alcanzar 400 puntos.
-
-### Nivel 2 — Esquiva de obstáculos
-Una vez superado el primer nivel, aparecen tortugas marinas como obstáculos. El jugador debe saltarlas para evitar colisiones y continuar acumulando puntos.
-
-**Objetivo:** alcanzar 800 puntos.
-
----
-
-## ✨ Características principales
-
-- Sistema de autenticación de usuarios
-- Registro e inicio de sesión mediante PHP y MySQL
-- Almacenamiento de puntajes en base de datos
-- Tabla de clasificación global (Leaderboard)
-- Estadísticas individuales por jugador
-- Simulación de olas mediante funciones senoidales
-- Sistema de partículas para efectos visuales
-- Arquitectura modular basada en clases JavaScript
-- Comunicación asíncrona mediante Fetch API
 
 ---
+## Estructura del proyecto
 
-## 🕹️ Controles
-
-| Tecla | Acción |
-|-------|--------|
-| `←` | Desplazarse a la izquierda |
-| `→` | Desplazarse a la derecha |
-| `ESPACIO` | Saltar obstáculos (Nivel 2) |
-
----
-
-## 🗂️ Estructura del proyecto
-
-```
+```text
 JUEGO-TORNEO-SURF/
 │
 ├── surf-mancora-game/
+│   │
 │   ├── index.html
 │   │
 │   ├── assets/
+│   │   │
+│   │   ├── audio/
+│   │   │   ├── background.mp3
+│   │   │   ├── collision.mp3
+│   │   │   ├── game-over.mp3
+│   │   │   ├── jump.mp3
+│   │   │   ├── sun-collect.mp3
+│   │   │   └── victory.mp3
+│   │   │
 │   │   ├── fondo.png
 │   │   ├── surfista.png
 │   │   └── tortuga.png
@@ -58,150 +44,208 @@ JUEGO-TORNEO-SURF/
 │   ├── css/
 │   │   └── style.css
 │   │
-│   └── js/
-│       ├── api.js
-│       ├── assets.js
-│       ├── main.js
-│       ├── obstacle.js
-│       ├── particles.js
-│       ├── physics.js
-│       ├── sun.js
-│       └── surfer.js
+│   ├── js/
+│   │   ├── api.js
+│   │   ├── assets.js
+│   │   ├── audio.js
+│   │   ├── main.js
+│   │   ├── obstacle.js
+│   │   ├── particles.js
+│   │   ├── physics.js
+│   │   ├── sun.js
+│   │   ├── surfer.js
+│   │   └── visual-effects.js
+│   │
+│   └── README.md
 │
-└── backend/
+└── C:\xampp\htdocs\backend\
     ├── api.php
     ├── config.php
-    ├── config.example.php
     ├── leaderboard.php
     ├── login.php
     ├── player-stats.php
     └── register.php
 ```
+---
+
+## Arquitectura del sistema
+
+El sistema está organizado en tres capas principales:
+
+### Capa de Presentación (Frontend)
+
+Desarrollada con HTML5 Canvas, CSS3 y JavaScript ES6+.
+
+Módulos principales:
+
+* `main.js` → Control del Game Loop principal.
+* `physics.js` → Simulación de olas y cálculo de pendientes.
+* `surfer.js` → Movimiento y salto del jugador.
+* `obstacle.js` → Gestión de tortugas y colisiones.
+* `sun.js` → Coleccionables y puntuación.
+* `particles.js` → Efectos de agua.
+* `audio.js` → Música de fondo y efectos sonoros.
+* `visual-effects.js` → Explosiones, flashes, escudos y animaciones.
+* `api.js` → Comunicación con el backend.
+* `assets.js` → Precarga de recursos gráficos.
+
+### Capa de Aplicación (Backend)
+
+Desarrollada con PHP 8 ejecutándose sobre Apache (XAMPP).
+
+Responsabilidades:
+
+* Autenticación de usuarios.
+* Registro de cuentas.
+* Guardado de puntajes.
+* Obtención de estadísticas.
+* Generación del leaderboard global.
+* Validación y sanitización de datos.
+
+### Capa de Datos (Database)
+
+Base de datos MySQL denominada `piura_games`.
+
+Tablas principales:
+
+* `users`
+* `game_sessions`
 
 ---
 
-## ⚙️ Instalación y ejecución local
+## Flujo de datos
 
-### Requisitos
-- XAMPP (Apache y MySQL)
-- PHP 8 o superior
-- Visual Studio Code
-- Navegador moderno
+### Inicio de sesión
 
-### 1. Configurar XAMPP
-Iniciar los siguientes servicios desde el panel de control de XAMPP:
-- Apache
-- MySQL
+1. El usuario ingresa sus credenciales.
+2. `api.js` envía la solicitud mediante Fetch API.
+3. `login.php` valida los datos.
+4. MySQL verifica la información almacenada.
+5. Se devuelve la sesión del jugador.
 
-### 2. Crear la base de datos
-Ingresar a `http://localhost/phpmyadmin` y ejecutar:
+### Ejecución del juego
 
-```sql
-CREATE DATABASE IF NOT EXISTS piura_games
-CHARACTER SET utf8mb4
-COLLATE utf8mb4_general_ci;
+1. `main.js` inicia el Game Loop utilizando `requestAnimationFrame`.
+2. `physics.js` calcula la forma de la ola.
+3. `surfer.js` actualiza la posición del jugador.
+4. `audio.js` reproduce la música de fondo.
+5. `visual-effects.js` inicializa los efectos visuales.
+6. Canvas renderiza todos los elementos del juego.
 
-USE piura_games;
+### Eventos durante la partida
 
-CREATE TABLE users (
-    id            INT AUTO_INCREMENT PRIMARY KEY,
-    username      VARCHAR(20) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+**Recolección de soles**
 
-CREATE TABLE game_sessions (
-    id            INT AUTO_INCREMENT PRIMARY KEY,
-    player_name   VARCHAR(20) NOT NULL,
-    score         INT NOT NULL,
-    level_reached INT DEFAULT 1,
-    played_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+* Reproducción de sonido de recompensa.
+* Generación de partículas doradas.
+* Incremento de puntuación.
+
+**Colisión con tortugas**
+
+* Reproducción de sonido de impacto.
+* Flash visual en pantalla.
+* Finalización de la partida.
+
+**Victoria**
+
+* Reproducción de fanfarria.
+* Efecto visual de celebración.
+* Guardado automático de resultados.
+
+### Fin de partida
+
+1. `api.js` envía los resultados al backend.
+2. `api.php` procesa la información.
+3. MySQL almacena la sesión.
+4. Se actualizan las estadísticas y el leaderboard.
+
+---
+
+## Sistema de audio
+
+El módulo `audio.js` incorpora:
+
+* Música de fondo en bucle.
+* Sonido de salto.
+* Sonido de recolección de soles.
+* Sonido de colisión.
+* Sonido de victoria.
+* Sonido de derrota.
+* Control de volumen.
+
+---
+
+## Sistema de efectos visuales
+
+El módulo `visual-effects.js` proporciona:
+
+* Flash rojo por colisiones.
+* Flash blanco de victoria.
+* Explosiones de partículas.
+* Escudos animados.
+* Efectos de impacto.
+* Animaciones de celebración.
+
+---
+
+## Tecnologías utilizadas
+
+| Tecnología      | Función                              |
+| --------------- | ------------------------------------ |
+| HTML5 Canvas    | Renderizado 2D del juego             |
+| CSS3            | Diseño visual e interfaz             |
+| JavaScript ES6+ | Lógica y mecánicas                   |
+| Fetch API       | Comunicación cliente-servidor        |
+| Web Audio API   | Reproducción de sonidos              |
+| PHP 8           | Backend                              |
+| MySQL           | Persistencia de datos                |
+| PDO             | Acceso seguro a base de datos        |
+| Apache          | Servidor web                         |
+| XAMPP           | Entorno de desarrollo local          |
+| Live Server     | Servidor de desarrollo para frontend |
+
+```
 ```
 
-### 3. Configurar el backend
-Copiar la carpeta `backend/` dentro de:
+### Configuración del backend (XAMPP)
 
-```
+Copiar la carpeta `backend` dentro de:
+
+```text
 C:\xampp\htdocs\
 ```
 
-Luego copiar el archivo de configuración y completar las credenciales:
+Resultado:
 
-```bash
-cp backend/config.example.php backend/config.php
+```text
+C:\xampp\htdocs\backend\
 ```
 
-### 4. Ejecutar el frontend
-Abrir la carpeta `surf-mancora-game` en Visual Studio Code y ejecutar **Open with Live Server**.
+Configurar el archivo `config.php`:
 
-- Frontend: `http://127.0.0.1:5500`
-- Backend: `http://localhost/backend/`
+```php
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'piura_games');
+define('DB_USER', 'root');
+define('DB_PASS', '');
+```
 
----
+### Ejecución del proyecto
 
-## 🔌 Endpoints disponibles
+1. Iniciar Apache y MySQL desde XAMPP.
+2. Abrir la carpeta `surf-mancora-game` en Visual Studio Code.
+3. Ejecutar **Open with Live Server** sobre `index.html`.
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| `POST` | `/backend/register.php` | Registro de nuevos usuarios |
-| `POST` | `/backend/login.php` | Inicio de sesión |
-| `POST` | `/backend/api.php` | Guardado de partidas |
-| `GET` | `/backend/leaderboard.php` | Tabla de clasificación global |
-| `GET` | `/backend/player-stats.php` | Estadísticas individuales del jugador |
+URLs de desarrollo:
 
----
+Frontend:
 
-## 🧮 Modelo matemático de las olas
+```text
+http://127.0.0.1:5500
+```
 
-La superficie del mar se representa mediante una función senoidal:
+Backend:
 
-$$y(x,t) = A \sin(kx + \omega t) + D$$
-
-| Parámetro | Descripción |
-|-----------|-------------|
-| `A` | Amplitud de la ola |
-| `k` | Frecuencia espacial |
-| `ω` | Velocidad de propagación |
-| `D` | Nivel base del agua |
-
-La inclinación de la tabla se calcula usando la pendiente local de la ola:
-
-$$\theta(x,t) = \arctan\left(Ak\cos(kx + \omega t)\right)$$
-
-Este enfoque permite generar un movimiento más natural y coherente con el comportamiento del océano.
-
----
-
-## 🔐 Seguridad implementada
-
-**Protección de contraseñas**
-Las credenciales se almacenan utilizando `password_hash()` y se verifican con `password_verify()`.
-
-**Prevención de SQL Injection**
-Uso de PDO con Prepared Statements y `bindParam()` en todos los endpoints.
-
-**Validación de datos**
-Se validan entradas antes de interactuar con la base de datos para reducir errores y accesos no deseados.
-
-**Configuración CORS**
-Permite la comunicación entre el frontend ejecutado mediante Live Server y el backend alojado en Apache.
-
----
-
-## 🛠️ Tecnologías utilizadas
-
-| Tecnología | Función |
-|------------|---------|
-| HTML5 Canvas | Renderizado del juego |
-| CSS3 | Diseño visual e interfaz |
-| JavaScript ES6+ | Lógica y mecánicas |
-| Fetch API | Comunicación cliente-servidor |
-| PHP | Backend |
-| MySQL | Persistencia de datos |
-| PDO | Acceso seguro a base de datos |
-| Apache | Servidor web |
-| XAMPP | Entorno de desarrollo local |
-
----
-
+```text
+http://localhost/backend/
+```
